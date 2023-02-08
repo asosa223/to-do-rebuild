@@ -1,0 +1,135 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.content {
+    display: grid;
+    grid-template-areas: 'banner banner'
+        'sidebar main';
+    grid-template-rows: auto 1fr;
+    grid-template-columns: auto 1fr;
+    min-height: 100vh;
+}
+
+header.banner {
+    grid-area: banner;
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    background-color: #2A2C24;
+    color: #F5F5F5;
+}
+
+/****NAVIGATION****/
+nav.sidebar {
+    grid-area: sidebar;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #E0E0E0;
+}
+
+ul {
+    display: flex;
+    flex-direction: column;
+    padding: 3rem;
+    gap: 1rem;
+}
+
+li.nav-item {
+    list-style: none;
+    padding: .5rem;
+    cursor: pointer;
+}
+
+button.btn-add-todo {
+    background-color: #2A2C24;
+    color: #F5F5F5;
+    margin: 0 4rem 1rem 0;
+    padding: 1.6rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    border: none;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: rgb(0 0 0 / 25%) 2.4px 2.4px 3.2px;
+}
+
+button.btn-add-todo-hide {
+    display: none;
+}
+
+/****MAIN CONTENT****/
+.main-content-container {
+    grid-area: main;
+    padding: 1rem;
+    background-color: #F5F5F5;
+}
+
+.main-content {
+    height: 100%;
+}
+
+.todo {
+    display: flex;
+    gap: 1rem;
+    background-color: #E0E0E0;
+    padding: 1rem;
+}
+
+.todo-urgent {
+    background-color: red;
+}
+
+/****ADD TODO OVERLAY****/
+
+.overlay-container {
+    width: 100vw;
+    min-height: 100vh;
+    position: fixed;
+    z-index: 2;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.overlay-container-show {
+    display: flex;
+}
+
+.overlay-content {
+    display: flex;
+    min-height: 50%;
+    width: 30%;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    background-color: beige;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+form#frm-add-todo, .btn-overlay-container {
+    width: 90%;
+}
+
+form#frm-add-todo {
+    min-height: 25vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 2px dotted red;
+}
+
+.btn-overlay-container {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
