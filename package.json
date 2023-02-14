@@ -25,6 +25,7 @@
   "homepage": "https://github.com/asosa223/to-do-rebuild#readme",
   "devDependencies": {
     "css-loader": "^6.7.3",
+    "date-fns": "^2.29.3",
     "eslint": "^8.33.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-node": "^4.1.0",

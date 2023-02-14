@@ -11,7 +11,14 @@
   },
   "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": "error",
+    "prettier/prettier": [
+      "error",
+        {
+          "tabWidth": 4,
+          "bracketSpacing": true,
+          "printWidth": 160
+        }
+      ],
     "no-unused-vars": "warn",
     "no-console": "off",
     "func-names": "off",
