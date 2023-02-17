@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import format from "date-fns/format";
-import todos from "./todo";
+import todos from "./todos";
 
 export default function handleToDo() {
     const mainContent = document.querySelector(".main-content");
@@ -8,14 +8,26 @@ export default function handleToDo() {
     const ToDo = (id, title, description, due, urgent) => {
         // Get our elements
         const todoContainer = document.createElement("div");
+        // Add class and id to each todo
+        todoContainer.classList.add("todo");
+        todoContainer.setAttribute("id", `todo-${id}`);
+
         const ti = document.createElement("p");
-        const desc = document.createElement("p");
+
+        const detailsButton = document.createElement("button");
+        detailsButton.classList.add("todo-details-btn");
+        detailsButton.setAttribute("id", `todo-details-${id}`);
+
+        const editButton = document.createElement("button");
+        editButton.classList.add("todo-edit-btn");
+        editButton.setAttribute("id", `todo-edit-${id}`);
+
         const du = document.createElement("p");
         const removeButton = document.createElement("button");
 
         const setValues = () => {
             ti.innerText = title;
-            desc.innerText = description;
+            detailsButton.innerText = "Details";
             du.innerText = format(due, "M/d/yyyy");
             removeButton.innerText = "Del";
         };
@@ -23,12 +35,9 @@ export default function handleToDo() {
         const append = () => {
             setValues();
 
-            // Add class and id to each todo
-            todoContainer.classList.add("todo");
-            todoContainer.setAttribute("id", `todo-${id}`);
-
             todoContainer.appendChild(ti);
-            todoContainer.appendChild(desc);
+            todoContainer.appendChild(detailsButton);
+            todoContainer.appendChild(editButton);
             todoContainer.appendChild(du);
             todoContainer.appendChild(removeButton);
         };

@@ -1,7 +1,8 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import parseISO from "date-fns/parseISO";
+import { parseISO, format } from "date-fns";
 import handleForm from "./handleForm";
 import handleToDo from "./handleToDo";
+import todos from "./todos";
 
 export default function handleOverlays() {
     const content = document.querySelector(".content");
@@ -71,12 +72,71 @@ export default function handleOverlays() {
 
                 // Increase click count
                 count++;
-
+                console.log(todos);
                 // remove overlay-container-show class to remove overlay
                 if (overlayContainerAddToDo.classList.contains("overlay-container-show")) {
                     overlayContainerAddToDo.classList.remove("overlay-container-show");
                 }
             });
         })();
+    })();
+
+    (function detailsOverlay() {
+        // Create container for our details overlay
+        const overlayContainerDetails = document.createElement("div");
+        overlayContainerDetails.classList.add("overlay-container-details"); // ❗️ Change class
+        document.body.insertBefore(overlayContainerDetails, content);
+
+        // create a container for our details content
+        const overlayContentDetails = document.createElement("div");
+        overlayContentDetails.classList.add("overlay-content-details"); // ❗️ Change class
+        overlayContainerDetails.appendChild(overlayContentDetails);
+
+        // Create elements to display our todo details
+        const detailTitle = document.createElement("p");
+        const detailDescription = document.createElement("p");
+        const detailDue = document.createElement("p");
+        const detailUrgent = document.createElement("p");
+        const closeDetailsBtn = document.createElement("button");
+        closeDetailsBtn.innerText = "x";
+
+        // Look for when the todo details button is clicked
+        document.addEventListener("click", (e) => {
+            const detailsClicked = e.target;
+
+            if (detailsClicked.classList.contains("todo-details-btn")) {
+                overlayContainerDetails.classList.add("overlay-container-show");
+
+                // Loop through todos array
+                todos.forEach((todo) => {
+                    // Store todo object values
+                    const id = Object.values(todo)[0];
+                    const titleForDetail = Object.values(todo)[1];
+                    const descriptionForDetail = Object.values(todo)[2];
+                    const dueForDetail = Object.values(todo)[3];
+                    const urgent = Object.values(todo)[4];
+                    const isUrgent = urgent ? "Yes" : "No";
+
+                    // If the details button id matches the same todo object id, then populate that objects values into overlay
+                    if (detailsClicked.id === `todo-details-${id}`) {
+                        detailTitle.innerText = titleForDetail;
+                        detailDescription.innerText = `Notes: ${descriptionForDetail}`;
+                        detailDue.innerText = `Due: ${format(dueForDetail, "M/d/yyyy")}`;
+                        detailUrgent.innerText = `Urgent: ${isUrgent}`;
+                    }
+                });
+                overlayContentDetails.appendChild(detailTitle);
+                overlayContentDetails.appendChild(detailDescription);
+                overlayContentDetails.appendChild(detailDue);
+                overlayContentDetails.appendChild(detailUrgent);
+                overlayContentDetails.appendChild(closeDetailsBtn);
+
+                closeDetailsBtn.addEventListener("click", () => {
+                    if (overlayContainerDetails.classList.contains("overlay-container-show")) {
+                        overlayContainerDetails.classList.remove("overlay-container-show");
+                    }
+                });
+            }
+        });
     })();
 }

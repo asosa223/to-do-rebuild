@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { endOfWeek, isSameDay } from "date-fns";
 import handleToDo from "./handleToDo";
-import todos from "./todo";
+import todos from "./todos";
 
 // Handle todays to-dos display
 export default function handleTabs() {
