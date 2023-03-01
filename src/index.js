@@ -1,11 +1,18 @@
 import "./style.css";
-import handleOverlays from "./handleOverlays";
-import handleTabs from "./handleTabs";
+import handleToDo from "./handleToDo";
 
 (function () {
+    // Select our add todo button
+    const addToDoButton = document.querySelector(".btn-add-todo");
+
+    // Select our add todo form container
+    const addToDoContainer = document.querySelector(".add-todo-overlay-container");
+
+    addToDoButton.addEventListener("click", () => {
+        addToDoContainer.classList.add("overlay-container-show");
+    });
     // load all of our components
-    handleOverlays();
-    handleTabs();
+    handleToDo();
 })();
 
 /**

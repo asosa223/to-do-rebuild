@@ -7,7 +7,39 @@
     <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
-    <div class="content">
+    <main class="content">
+      <section class="add-todo-overlay-container">
+          <form id="frm-add-todo">
+            <input 
+              type="text" 
+              placeholder="title"
+              name="title"
+              id="title" />
+            <textarea 
+              placeholder="description"
+              name="description"
+              id="description"
+              rows="3"
+              cols="32" ></textarea>
+            <input 
+              type="date" 
+              name="due"
+              id="due" />
+            <label>
+              <input 
+                type="checkbox" 
+                name="urgent"
+                id="urgent" /> 
+              Urgent
+            </label>
+            <div class="btn-overlay-container">
+              <button type="button" id="btn-overlay-cancel">Cancel</button>
+              <button type="submit" id="btn-overlay-add">Add</button>
+            </div>           
+          </form>
+      </section>
+      <section class="details-overlay-container">
+      </section>
       <header class="banner"><h1>TO-DO</h1></header>
       <nav class="sidebar">
         <ul>
@@ -20,6 +52,6 @@
       <div class="main-content-container">
         <div class="main-content"></div>
       </div>
-    </div>
+    </main>
   </body>
 </html>

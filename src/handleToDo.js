@@ -1,78 +1,158 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
-import format from "date-fns/format";
-import todos from "./todos";
+import { parseISO, format } from "date-fns";
 
 export default function handleToDo() {
-    const mainContent = document.querySelector(".main-content");
+    let todos = [];
 
-    const ToDo = (id, title, description, due, urgent) => {
-        // Get our elements
-        const todoContainer = document.createElement("div");
-        // Add class and id to each todo
-        todoContainer.classList.add("todo");
-        todoContainer.setAttribute("id", `todo-${id}`);
+    // Select our add todo form container
+    const addToDoContainer = document.querySelector(".add-todo-overlay-container");
+    const addTodoForm = document.querySelector("#frm-add-todo");
+    const closeButton = document.querySelector("#btn-overlay-cancel");
 
-        const ti = document.createElement("p");
+    function displayTodos() {
+        // Select and clear the main content area for our todos loop
+        const mainContent = document.querySelector(".main-content");
+        mainContent.textContent = "";
 
-        const detailsButton = document.createElement("button");
-        detailsButton.classList.add("todo-details-btn");
-        detailsButton.setAttribute("id", `todo-details-${id}`);
+        // Loop through all of our todos and display their content
+        todos.forEach((todo) => {
+            const todoItem = document.createElement("div");
+            todoItem.classList.add("todo-item");
 
-        const editButton = document.createElement("button");
-        editButton.classList.add("todo-edit-btn");
-        editButton.setAttribute("id", `todo-edit-${id}`);
+            // Create elements
+            const content = document.createElement("div");
+            const actions = document.createElement("div");
+            const titleInput = document.createElement("input");
+            const dateInput = document.createElement("input");
+            const detailsButton = document.createElement("button");
+            const editButton = document.createElement("button");
+            const deleteButton = document.createElement("button");
 
-        const du = document.createElement("p");
-        const removeButton = document.createElement("button");
+            content.classList.add("todo-content");
+            actions.classList.add("todo-actions");
 
-        const setValues = () => {
-            ti.innerText = title;
-            detailsButton.innerText = "Details";
-            du.innerText = format(due, "M/d/yyyy");
-            removeButton.innerText = "Del";
-        };
+            const formattedDate = format(todo.due, "yyyy-MM-dd");
 
-        const append = () => {
-            setValues();
+            // Set element values
+            titleInput.type = "text";
+            titleInput.value = todo.title;
+            titleInput.id = "content-title";
+            titleInput.setAttribute("readonly", true);
 
-            todoContainer.appendChild(ti);
-            todoContainer.appendChild(detailsButton);
-            todoContainer.appendChild(editButton);
-            todoContainer.appendChild(du);
-            todoContainer.appendChild(removeButton);
-        };
+            dateInput.type = "date";
+            dateInput.value = formattedDate;
+            dateInput.id = "content-due";
+            dateInput.setAttribute("readonly", true);
 
-        const removeToDo = () => {
-            // When remove button is clicked, remove same todo element
-            removeButton.addEventListener("click", () => {
-                todoContainer.remove(`todo-${id}`);
+            detailsButton.textContent = "Details";
+            editButton.textContent = "Edit";
+            deleteButton.textContent = "Delete";
 
-                // iterate through todos array backwards and splice item with matching id
-                for (let i = todos.length - 1; i >= 0; --i) {
-                    if (todos[i].id === id) {
-                        todos.splice(i, 1);
+            // Append to main content
+            content.appendChild(titleInput);
+            content.appendChild(dateInput);
+            actions.appendChild(editButton);
+            actions.appendChild(detailsButton);
+            actions.appendChild(deleteButton);
+            todoItem.appendChild(content);
+            todoItem.appendChild(actions);
+            mainContent.appendChild(todoItem);
+
+            // When details is clicked, display todo details
+            detailsButton.addEventListener("click", () => {
+                const detailsOverlay = document.querySelector(".details-overlay-container");
+                detailsOverlay.classList.add("overlay-container-show");
+
+                // Create elements for details overlay
+                const detailsContent = document.createElement("div");
+                const detailsTitle = document.createElement("div");
+                const detailsDescription = document.createElement("div");
+                const detailsDue = document.createElement("div");
+                const detailsUrgent = document.createElement("div");
+                const detailsCloseButton = document.createElement("button");
+
+                detailsContent.classList.add("details-overlay-content");
+
+                // Set details values
+                detailsTitle.textContent = todo.title;
+                detailsDescription.textContent = todo.description;
+                detailsDue.textContent = format(todo.due, "M/d/yyyy");
+                detailsUrgent.textContent = todo.urgent ? "Yes" : "No";
+                detailsCloseButton.textContent = "Close";
+
+                // Append to details overlay
+                detailsContent.appendChild(detailsTitle);
+                detailsContent.appendChild(detailsDescription);
+                detailsContent.appendChild(detailsDue);
+                detailsContent.appendChild(detailsUrgent);
+                detailsContent.appendChild(detailsCloseButton);
+                detailsOverlay.appendChild(detailsContent);
+
+                // If close button is clicked, remove show class
+                detailsCloseButton.addEventListener("click", () => {
+                    if (detailsOverlay.classList.contains("overlay-container-show")) {
+                        detailsOverlay.classList.remove("overlay-container-show");
                     }
-                }
+                });
             });
+
+            editButton.addEventListener("click", () => {
+                const inputs = content.querySelectorAll("input");
+                const contentTitle = content.querySelector("#content-title");
+                const contentDue = content.querySelector("#content-due");
+
+                inputs.forEach((input) => {
+                    input.removeAttribute("readonly");
+                    contentTitle.focus();
+                    contentTitle.style.background = "red";
+                    contentDue.style.background = "red";
+                    contentTitle.addEventListener("blur", (e) => {
+                        contentTitle.setAttribute("readonly", true);
+                        todo.title = e.target.value;
+                        contentDue.addEventListener("blur", (el) => {
+                            contentTitle.setAttribute("readonly", true);
+                            todo.due = parseISO(el.target.value);
+                            displayTodos();
+                        });
+                    });
+                });
+            });
+
+            // When delete button is clicked, remove our todo
+            deleteButton.addEventListener("click", () => {
+                todos = todos.filter((t) => t !== todo);
+                displayTodos();
+            });
+        });
+    }
+
+    // When form is submitted, todo object is created, pushed into array and displayed
+    addTodoForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const todo = {
+            title: e.target.elements.title.value,
+            description: e.target.elements.description.value,
+            due: parseISO(e.target.elements.due.value),
+            urgent: e.target.elements.urgent.checked,
         };
 
-        // if urgent is checks, add our urgent class
-        const handleUrgent = () => {
-            if (urgent === true) {
-                todoContainer.classList.add("todo-urgent");
-            }
-        };
+        todos.push(todo);
 
-        const displayToDo = () => {
-            append();
-            removeToDo();
-            handleUrgent();
-            mainContent.appendChild(todoContainer);
-        };
+        e.target.reset();
 
-        todos.push({ id, title, description, due, urgent, displayToDo });
-        return { displayToDo };
-    };
+        if (addToDoContainer.classList.contains("overlay-container-show")) {
+            addToDoContainer.classList.remove("overlay-container-show");
+        }
 
-    return { mainContent, ToDo };
+        displayTodos();
+        console.log(todos);
+    });
+
+    // If close button is clicked, remove show class
+    closeButton.addEventListener("click", () => {
+        if (addToDoContainer.classList.contains("overlay-container-show")) {
+            addToDoContainer.classList.remove("overlay-container-show");
+        }
+    });
 }

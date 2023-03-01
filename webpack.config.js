@@ -6,10 +6,6 @@ module.exports = {
     entry: {
         index: "./src/index.js",
         handleToDo: "./src/handleToDo.js",
-        handleForm: "./src/handleForm.js",
-        handleOverlays: "./src/handleOverlays.js",
-        handleTabs: "./src/handleTabs.js",
-        todos: "./src/todos.js",
     },
     devtool: "inline-source-map",
     devServer: {
